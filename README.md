@@ -1,1 +1,1 @@
-# Crowd-Funding-Web-App-using-Django-
+# Crowd-Funding-Web-App-using-Django
