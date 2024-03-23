@@ -1,0 +1,22 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block 'content' %}
+<style>
+    button{
+        margin-top: 10px;
+        display: block;
+        width: 105px;
+    }
+</style>
+<body>
+    <h1>Add a project</h1>
+    <form method="post" enctype="multipart/form-data">
+        <div class="container">
+            {% csrf_token %}
+            {{projectForm.as_p}}
+            <input type = "file" multiple name="picture"><br>
+            <button class="btn btn-danger" type="submit">Add</button>
+        </div>
+    </form>
+</body>
+{% endblock %}
