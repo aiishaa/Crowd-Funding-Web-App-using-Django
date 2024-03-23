@@ -67,10 +67,15 @@ WSGI_APPLICATION = 'Cfund.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'crowdfunding',
+        'USER': 'root',
+        'PASSWORD': 'Fcis2019##',
+        'HOST':'localhost',
+        'PORT':'3306'
     }
 }
+
 
 
 # Password validation

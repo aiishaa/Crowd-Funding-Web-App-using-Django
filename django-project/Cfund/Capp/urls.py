@@ -3,12 +3,12 @@ from django.urls import path
 
 from Capp.views import register,user_login,project_start
 
-from django.contrib import admin
+# from django.contrib import admin
 
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     path('login/', user_login, name='login'),
     path('register/', register, name='register'),
     path('project-start/', project_start, name='project_start'),
