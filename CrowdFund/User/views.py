@@ -19,7 +19,7 @@ User = get_user_model()
 
 class verificationView(View):
     def isTokenExpired(self, activationTime):
-        expiryDuration = timedelta(days=0, hours=1)  # Expiry duration set to 1 hour
+        expiryDuration = timedelta(days=1)  # Expiry duration set to 1 day
         expiryDate = activationTime + expiryDuration
         expiryDate = expiryDate.replace(tzinfo=None)  
         now = datetime.now().replace(tzinfo=None)  # Convert current datetime to naive
