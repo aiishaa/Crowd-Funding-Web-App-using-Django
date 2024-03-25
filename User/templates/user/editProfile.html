@@ -1,0 +1,32 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block 'content' %}
+<title>Edit Profile</title>
+<style>
+    h1{
+        color: brown;
+    }
+    img {
+        width: 700px;
+        height: auto;
+        object-fit: contain;
+        margin-bottom: 40px;
+    }
+    p{
+        margin-top: 20px;
+        color: rgb(53, 28, 3);
+    }
+
+</style>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container">
+            <h1>Edit Profile</h1>
+            {{form.as_p}}
+            <button class="btn btn-danger" type="submit">Edit</button>
+        </div>
+    </form>
+</body>
+{% endblock %}

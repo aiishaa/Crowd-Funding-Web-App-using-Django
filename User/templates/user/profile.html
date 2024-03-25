@@ -1,0 +1,44 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block 'content' %}
+<title>Show Profile</title>
+<style>
+    h1{
+        color: brown;
+    }
+    img {
+        height: auto;
+        object-fit: contain;
+        margin-bottom: 40px;
+    }
+    p{
+        margin-top: 20px;
+        color: rgb(53, 28, 3);
+        font-size: 20px;
+        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+    }
+    .profile{
+        padding: 10px 20px; 
+        display: inline-block;
+        cursor: pointer;
+        background-color: rgb(76, 76, 99);
+        text-decoration: none; 
+        color: #fff; 
+    }
+</style>
+</head>
+<body>
+    {% csrf_token %}
+    <div class="container">
+        <h1>Profile, {{ user.first_name }}</h1>
+        <p>First Name: {{ user.first_name }}</p>
+        <p>Last Name: {{ user.last_name }}</p>
+        <p>User Name: {{ user.username }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Phone: {{ user.phone }}</p>
+        <p>Profile Picture: </p>
+        <img src="{{ user.profile_picture.url }}" height="250px"><br>
+        <a class = "profile" href="{% url 'edit profile' user.id %}">Edit profile</a>
+    </div>
+</body>
+{% endblock %}

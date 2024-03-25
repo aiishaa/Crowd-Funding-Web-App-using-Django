@@ -1,0 +1,37 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block 'content' %}
+<title>Crowd Funding</title>
+<style>
+    h1 {
+        color: rgb(192, 192, 227);
+    }
+    img {
+        width: 700px;
+        height: auto;
+        object-fit: contain;
+        margin-bottom: 40px;
+    }
+    .container {
+        text-align: center; 
+    }
+    .project {
+        padding: 10px 20px; 
+        display: inline-block;
+        cursor: pointer;
+        background-color: rgb(192, 192, 227);
+        text-decoration: none; 
+        color: #fff; 
+    }
+</style>
+</head>
+<body>
+    {% csrf_token %}
+    <div class="container">
+        <h1 class="mt-5 mb-4 text-center">Welcome to Crowd Funding....</h1>
+        <div class="row justify-content-center">
+            <img src="{% static 'images/download2.jfif' %}" alt="Crowd Funding Image">
+        </div>
+    </div>
+</body>
+{% endblock %}
