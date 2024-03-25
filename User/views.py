@@ -15,6 +15,7 @@ from django.urls import reverse
 from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 import os
 from django.conf import settings
 
@@ -22,12 +23,10 @@ User = get_user_model()
 
 class verificationView(View):
     def isTokenExpired(self, activationTime):
-        expiryDuration = timedelta(days=1)  # Expiry duration set to 1 day
+        # Set expiry duration to 1 day
+        expiryDuration = timedelta(days=1)
         expiryDate = activationTime + expiryDuration
-        expiryDate = expiryDate.replace(tzinfo=None)  
-        now = datetime.now().replace(tzinfo=None)  # Convert current datetime to naive
-        # print(expiryDate)
-        # print(now)
+        now = timezone.localtime(timezone.now())
         return now > expiryDate
 
 
@@ -86,12 +85,12 @@ def createUser(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False  # Set user as inactive until email verification
-            user.date_joined = datetime.now()
+            # user.date_joined = datetime.now()
             user.save()
             sendMail(request, user)
             messages.success(request, "Your account has been created successfully")
             # print(form)
-            return redirect("home") 
+            return redirect("landing") 
             # return HttpResponse("Account created successfully")
         else:
             messages.error(request, "Error")
