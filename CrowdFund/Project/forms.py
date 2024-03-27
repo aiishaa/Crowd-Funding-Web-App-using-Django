@@ -1,5 +1,5 @@
 from django import forms
-from .models import Project, Category
+from .models import Project, Category, Rate
 
 class ProjectForm(forms.ModelForm):
     tags = forms.CharField(max_length=100, required=False, help_text="Enter tags separated by commas")
@@ -21,6 +21,12 @@ class ProjectForm(forms.ModelForm):
             return end_time
         else:
             raise forms.ValidationError("End date must be after start date")
+        
+class AddRate(forms.ModelForm):
+    
+    class Meta:
+        model= Rate
+        fields= ('rateValue',)
     
 
     

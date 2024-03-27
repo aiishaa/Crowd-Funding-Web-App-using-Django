@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .forms import ProjectForm
+from django.shortcuts import render, redirect, reverse
+from .forms import *
 from django.http import HttpResponse
 from .models import *
 from django.contrib.auth import get_user_model
@@ -68,23 +68,58 @@ def otherProjectDesc(request, userID, proID):
         # prepare average rating.
         rating = list(Rate.objects.filter( project_id=proID).values_list('rateValue', flat=True))
         average_rating = 0
-        if len(rating) > 1:
+        if len(rating) > 0:
             for value in rating:
                 average_rating+=value
-            average_rating= average_rating/len(rating)
+            average_rating= int(average_rating/len(rating))
+
+        # add rate.
+        project = Project.objects.get(id=proID)
+        user = User.objects.get(id=userID)
+        rate_instance = Rate.objects.filter(project=project, user=user).first()
+
+        try:
+            rateform = AddRate(instance=rate_instance) 
+        except:
+            rateform = AddRate()
+
+        if request.method == 'POST':
+            
+            if rate_instance:
+                rateform = AddRate(request.POST, instance=rate_instance) 
+            else:
+                rateform = AddRate(request.POST)
+                rateform.instance.project_id=proID
+                rateform.instance.user_id=userID
+
+            if rateform.is_valid():
+
+                if rateform.instance.rateValue == 0:
+                    Rate.objects.get(project=project, user=user).delete()
+                else:
+                    rate = rateform.save()  
+
+                url = reverse('other project desc', args=[userID, proID])
+                return redirect(url)
+
 
         # 4 other similar projects based on project tags.
         assosiated_tags = list(Project.objects.get(id=proID).tags.all().values_list('name', flat=True))
         similar_projects = Project.objects.exclude(p_owner_id=userID) 
         similar_projects = similar_projects.filter(tags__name__in=assosiated_tags)
 
-        # roject pictures to be displayed in a slider.
+        # project pictures to be displayed in a slider.
         pictures = Picture.objects.filter(project_id=proID)
 
         # project data.
-        project = Project.objects.filter(id=proID)
+        project = Project.objects.get(id=proID)
+        project.category_name = Category.objects.get(id=project.category_id)
+        project.owner_name = User.objects.get(id=project.p_owner_id)
 
-        return render(request, r"other_project_desc.html", context={"project": project, "userID": userID, "averageRate": average_rating, "images": pictures, "similarProjects": similar_projects})
+        # project comments
+        comments = Comment.objects.filter(project_id=proID)
+
+        return render(request, r"other_project_desc.html", context={"project": project, "userID": userID, "averageRate": average_rating, "images": pictures, "comments": comments, "similarProjects": similar_projects, "rateForm": rateform})
     
     except Exception as e:
         return HttpResponse(e)

@@ -40,6 +40,10 @@ class Project(models.Model):
 class Picture(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     picture = models.ImageField(upload_to=project_images_path, blank=True)
+    
+    @property
+    def image_url(self):
+        return f'/media/{self.picture}'
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -60,7 +64,7 @@ class Donation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Rate(models.Model):
-    rate_choices = { 1:'1', 2:'2', 3: '3', 4:'4', 5:'5' }
+    rate_choices = { 0: '0', 1:'1', 2:'2', 3: '3', 4:'4', 5:'5' }
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rateValue = models.IntegerField(choices=rate_choices)

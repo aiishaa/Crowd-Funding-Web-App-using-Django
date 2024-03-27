@@ -152,19 +152,12 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-# #Configure the email smtp service
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = os.environ['EMAIL_HOST']
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-# EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
-
-
 #Configure the email smtp service
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = os.environ['EMAIL_HOST']
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mt2910201@gmail.com'
-EMAIL_HOST_PASSWORD = 'lnzw wrxh nsux irrw'
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+
+
