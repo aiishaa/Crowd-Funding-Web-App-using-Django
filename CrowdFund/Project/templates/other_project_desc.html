@@ -52,6 +52,45 @@
         border: 1px solid #eee;
     }
 
+    #comment_card {
+        width: 40rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    .donation {
+        overflow-y: scroll; 
+        height: 440px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    .similarprojects {
+        overflow-y: scroll; 
+        height: 600px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    #similarprojectcard {
+        overflow-y: scroll; 
+        width: 30rem; 
+        height: 240px; 
+        margin: 20px;
+    }
+
+    .reporting {
+        height: 150px; 
+        width: 60rem; 
+        margin: 40px 0;
+        border: 1px solid #eee;
+    }
+
 
 </style>
 <body>
@@ -128,9 +167,76 @@
             </form>
         </div>
 
+        <!-- comments -->
         <div class="comments">
-            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 25px 0; font-weight: bold; font-size: 25px;">Comments</h5>
-            
+            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 30px 0; font-weight: bold; font-size: 25px;">Comments</h5>
+            {% for comment in comments %}
+            {% if comment.user_id == userID %}
+            <div class="card" id="comment_card">
+                <div class="card-body">
+                    <img src="{{ comment.user_profile_picture }}" style="width: 100px; height: 100px; border-radius: 60px;" alt="not found">
+                    <h5 class="card-title">{{ comment.user_name }}</h5>
+                    <p class="card-text">{{ comment.comment_description }}</p>
+                    <a href="{% url 'delete comment' comment.user_id comment.project_id comment.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="card" id="comment_card">
+                <div class="card-body">
+                    <img src="{{ comment.user_profile_picture }}" style="width: 100px; height: 100px; border-radius: 60px;" alt="not found">
+                    <h5 class="card-title">{{ comment.user_name }}</h5>
+                    <p class="card-text">{{ comment.comment_description }}</p>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            <form method="post" style="margin: 40px 0 0 60px;">
+                {{commentForm}}
+                {% csrf_token %}
+                <input type="submit" class="btn btn-success">
+            </form>
+        </div>
+
+        <!-- donation -->
+        <div class="donation">
+            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 25px 0; font-weight: bold; font-size: 25px;">Donation</h5>
+            <h5 class="card-title" style="margin: 80px 0 0 60px; color: firebrick; font-weight: bold; font-size: 20px;">Total Target: </h5>
+            <input type="text" id="numberField" name="numberField" value="{{ project.total_target }}" readonly style="cursor: none; margin-top: 20px; position: relative; left: 60px;">
+            <h5 class="card-title" style="margin: 80px 0 0 60px; color: firebrick; font-weight: bold; font-size: 20px;">Current Total Donation: </h5>
+            <input type="text" id="numberField" name="numberField" value="{{ totalDonation }}" readonly style="cursor: none; margin-top: 20px; position: relative; left: 60px;">
+            <h5 class="card-title" style="margin: 80px 0 0 60px; color: firebrick; font-weight: bold; font-size: 20px;">Your Donation: </h5>
+            <form method="post" style="margin: 40px 0 0 60px;">
+                {{donationForm}}
+                {% csrf_token %}
+                <input type="submit" class="btn btn-success">
+            </form>
+        </div>
+
+        <!-- similar projects -->
+        <div class="similarprojects">
+            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 25px 0; font-weight: bold; font-size: 25px;">Similar Projects</h5>
+            {% for project in similarProjects %}
+            <div id="similarprojectcard" class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: firebrick; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 25px;">{{ project.title }}</h5>
+                    <h5 class="card-title"><span style="font-weight: bold;">Category:</span> {{ project.category_name }}</h5>
+                    <h5 class="card-title"><span style="font-weight: bold;">Created by:</span> {{ project.owner_name }}</h5>
+                    <div style="display: flex; flex-direction: row; justify-content: center;">
+                        <a href="{% url 'other project desc' userID project.id %}" class="btn btn-primary" style="margin-top: 20px;">Show</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+
+        <!-- Reporting this project -->
+        <div class="reporting">
+            <h5 class="card-title" style="color: firebrick; margin: 25px 0 15px 60px; font-weight: bold; font-size: 20px;">Do you want to report on this project? (We will not display this project for you again.)</h5>
+            <form method="post" style="margin-left: 60px;">
+                {{reportForm}}
+                {% csrf_token %}
+                <input type="submit" class="btn btn-success">
+            </form>
         </div>
 
     </div>
@@ -143,7 +249,14 @@
             inputs[i].style.margin = '10px 0';
         }
         
+        // rating menu or selector
         select = document.querySelector('select');
+        select.classList.add('form-control');
+        select.style.width = '20rem';
+        select.style.margin = '15px 0 10px';
+
+        // comment text area
+        select = document.querySelector('textarea');
         select.classList.add('form-control');
         select.style.width = '20rem';
         select.style.margin = '15px 0 10px';

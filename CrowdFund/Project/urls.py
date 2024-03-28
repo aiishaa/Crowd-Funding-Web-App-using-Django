@@ -6,4 +6,5 @@ urlpatterns = [
     path('userprojects/<int:id>', userProjects, name="user projects"),
     path('otherprojects/<int:id>', otherProjects, name="other projects"),
     path('otherprojects/desc/<int:userID>/<int:proID>', otherProjectDesc, name="other project desc"),
+    path('otherprojects/desc/<int:userID>/<int:proID>/<int:commentID>', deleteComment, name="delete comment"),
 ]
