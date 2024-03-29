@@ -166,8 +166,9 @@ def otherProjectDesc(request, userID, proID):
                 else:
                     donation = donationform.save()  
 
-                url = reverse('other project desc', args=[userID, proID])
-                return redirect(url)
+            
+            url = reverse('other project desc', args=[userID, proID])
+            return redirect(url)
         
 
         # ======================= similar projects ========================= 
