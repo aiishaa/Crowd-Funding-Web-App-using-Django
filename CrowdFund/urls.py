@@ -23,6 +23,7 @@ from User.views import landing
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('/landing/', landing, name="landing"),
+    path('', landing, name="landing"),
     path('user/', include("User.urls")), 
     path('project/', include("Project.urls"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
