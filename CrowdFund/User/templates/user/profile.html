@@ -3,7 +3,7 @@
 {% block 'content' %}
 <title>Show Profile</title>
 <style>
-    h1{
+    h1 {
         color: brown;
     }
     img {
@@ -11,13 +11,13 @@
         object-fit: contain;
         margin-bottom: 40px;
     }
-    p{
+    p {
         margin-top: 20px;
         color: rgb(53, 28, 3);
         font-size: 20px;
-        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
-    .profile{
+    .profile {
         padding: 10px 20px; 
         display: inline-block;
         cursor: pointer;
@@ -25,10 +25,17 @@
         text-decoration: none; 
         color: #fff; 
     }
+    .delete {
+        padding: 10px 20px; 
+        display: inline-block;
+        cursor: pointer;
+        background-color: #FF6347;
+        text-decoration: none; 
+        color: #fff; 
+    }
 </style>
 </head>
 <body>
-    {% csrf_token %}
     <div class="container">
         <h1>Profile, {{ user.first_name }}</h1>
         <p>First Name: {{ user.first_name }}</p>
@@ -38,7 +45,8 @@
         <p>Phone: {{ user.phone }}</p>
         <p>Profile Picture: </p>
         <img src="{{ user.profile_picture.url }}" height="250px"><br>
-        <a class = "profile" href="{% url 'edit profile' user.id %}">Edit profile</a>
+        <a class="profile" href="{% url 'edit profile' user.id %}">Edit Profile</a>
+        <a class="delete" href="{% url 'delete_account' %}">Delete Account</a> <!-- Add this line -->
     </div>
 </body>
 {% endblock %}

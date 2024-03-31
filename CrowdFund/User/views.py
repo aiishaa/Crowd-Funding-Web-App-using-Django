@@ -147,3 +147,20 @@ def editProfile(request, id):
     else:
         form = EditProfileForm(instance=user)
     return render(request, 'user/editProfile.html', context={"form": form})
+
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        if request.user.check_password(password):
+            # User entered correct password
+            user = request.user
+            user.delete()
+            messages.success(request, "Your account has been deleted.")
+            return redirect('landing')
+        else:
+            # Incorrect password
+            messages.error(request, "Incorrect password. Please try again.")
+    return render(request, 'delete_account.html')

@@ -91,10 +91,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
         'NAME': 'CrowdFund',
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD'],
-        'HOST':  os.environ['DB_HOST'],
-        'PORT': '3306'
+        'USER': "root",
+        'PASSWORD':"sara1qaz",
+        'HOST':  "127.0.0.1",
+        'PORT': '3306',
     }
 }
 
@@ -151,10 +151,20 @@ AUTHENTICATION_BACKENDS = [
     'User.email_authentication.EmailBackend',
 ]
 
+
+# #Configure the email smtp service
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = os.environ['EMAIL_HOST']
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+# EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+
+
 #Configure the email smtp service
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_HOST_USER = "saraeldwiny@std.mans.edu.eg"
+EMAIL_HOST_PASSWORD = "yytu vzgb phtf hzfg"
