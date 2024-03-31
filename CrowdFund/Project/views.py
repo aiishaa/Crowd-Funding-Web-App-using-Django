@@ -85,7 +85,7 @@ def otherProjectDesc(request, userID, proID):
         except:
             rateform = AddRate()
 
-        if request.method == 'POST':
+        if request.method == 'POST' and 'rate_submit' in request.POST:
             
             if rate_instance:
                 rateform = AddRate(request.POST, instance=rate_instance) 
@@ -118,7 +118,7 @@ def otherProjectDesc(request, userID, proID):
 
         commentForm = AddComment()
 
-        if request.method == 'POST':
+        if request.method == 'POST' and 'comment_submit' in request.POST:
             
             commentForm = AddComment(request.POST)
             commentForm.instance.project_id=proID
@@ -149,7 +149,7 @@ def otherProjectDesc(request, userID, proID):
         except:
             donationform = AddDonation(max_value=(project.total_target-total_donation))
 
-        if request.method == 'POST':
+        if request.method == 'POST' and 'donation_submit' in request.POST:
             
             if donation_instance:
                 donationform = AddDonation(request.POST, instance=donation_instance, max_value=(project.total_target-total_donation)) 
@@ -170,12 +170,31 @@ def otherProjectDesc(request, userID, proID):
             url = reverse('other project desc', args=[userID, proID])
             return redirect(url)
         
+        
+        # ======================= reporting projects ========================= 
+                
+        reportform = AddReport()
+
+        if request.method == 'POST' and 'report_submit' in request.POST:
+            
+            reportform = AddReport(request.POST)
+            reportform.instance.project_id=proID
+            reportform.instance.user_id=userID
+
+            if reportform.is_valid():
+                report = reportform.save()  
+                url = reverse('other projects', args=[userID,])
+                return redirect(url)
+
+        
 
         # ======================= similar projects ========================= 
 
         # 4 other similar projects based on project tags.
-        assosiated_tags = list(Project.objects.get(id=proID).tags.all().values_list('name', flat=True))
-        similar_projects = Project.objects.exclude(p_owner_id=userID) 
+        assosiated_tags = list(Project.objects.get(id=proID).tags.all().values_list('name', flat=True)) 
+        reported_projects = list(Report.objects.filter(user_id=userID).values_list('project_id', flat=True))
+        similar_projects = Project.objects.exclude(p_owner_id=userID)
+        similar_projects = similar_projects.exclude(id__in=reported_projects) 
         similar_projects = similar_projects.filter(tags__name__in=assosiated_tags)
 
         if len(similar_projects) > 4:
@@ -184,23 +203,6 @@ def otherProjectDesc(request, userID, proID):
         for i in range(0, len(similar_projects)):
                 similar_projects[i].category_name = Category.objects.get(id=similar_projects[i].category_id)
                 similar_projects[i].owner_name = User.objects.get(id=similar_projects[i].p_owner_id)
-
-
-        # ======================= reporting projects ========================= 
-                
-        reportform = AddReport()
-
-        if request.method == 'POST':
-            
-            reportform = AddReport(request.POST)
-            reportform.instance.project_id=proID
-            reportform.instance.user_id=userID
-
-            if reportform.is_valid():
-
-                report = reportform.save()  
-                url = reverse('other projects', args=[userID])
-                return redirect(url)
 
 
         # ================================================================== 
