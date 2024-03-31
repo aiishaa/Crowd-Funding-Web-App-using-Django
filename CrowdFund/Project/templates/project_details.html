@@ -1,0 +1,251 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block 'content' %}
+    <title>Project Details</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Project Details Styles */
+        .project-details {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .project-details p {
+            margin-bottom: 10px;
+        }
+
+        .project-details strong {
+            font-weight: bold;
+        }
+
+        .oval-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 20px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .project-pictures img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .comments-section {
+            margin-top: 20px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .comments {
+            border-top: 1px solid #ddd;
+        }
+        
+        .comment {
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .comment-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .user-profile-picture {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .username {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .delete-comment {
+            margin-left: auto;
+        }
+        
+        .delete-link {
+            color: #dc3545;
+            text-decoration: none;
+        }
+        
+        .comment-content {
+            margin-bottom: 10px;
+        }
+        .donation-section {
+            margin-top: 20px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .delete-section {
+            margin-top: 10px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .delete-section p {
+            color: #dc3545;
+            margin-top: 10px;
+        }
+        
+
+    </style>
+
+<body>
+    <div class="container">
+        <h2>Project Details</h2>
+        <div class="project-details">
+            <p><strong>Title:</strong> {{ project.title }}</p>
+            <p><strong>Description:</strong> {{ project.description }}</p>
+            <p><strong>Category:</strong> {{ project.category }}</p>
+            <p><strong>Tags:</strong> 
+                {% for tag in project.tags.all %}
+                    <span class="oval-tag">{{ tag }}</span>
+                {% endfor %}
+            </p>
+            <p><strong>Total Target:</strong> {{ project.total_target }}</p>
+            <p><strong>Start Time:</strong> {{ project.start_time }}</p>
+            <p><strong>End Time:</strong> {{ project.end_time }}</p>
+        </div>
+
+        <div class="project-pictures">
+            <h3>Project Pictures</h3>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {% for picture in project_pictures %}
+                        <div class="swiper-slide">
+                            <img src="{{ picture.picture.url }}" alt="Project Picture">
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Add pagination bullets -->
+                <div class="swiper-pagination"></div>
+                <!-- Add navigation buttons -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+
+         <!-- Display Average Rating -->
+            <div class="average-rating-section">
+                <h3 class="subtitle">Average Rating</h3>
+                <div class="rating">
+                    <p>{{ average_rating }}</p>
+                </div>
+            </div>
+
+    <div class="comments-section">
+        <h3 class="subtitle">Comments</h3>
+        <div class="comments">
+            {% for comment in comments %}
+                <div class="comment">
+                    <div class="comment-info">
+                        <img src="{{ comment.user_profile_picture }}" alt="User Profile Picture" class="user-profile-picture">
+                        <span class="username">{{ comment.user }}</span>
+                        <span class="delete-comment">
+                            <a href="{% url 'delete_comment' comment.id %}" class="delete-link">Delete</a>
+                        </span>
+                    </div>
+                    <div class="comment-content">
+                        {{ comment.comment_description }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="donation-section">
+        <h3 class="subtitle">Total Donation: ${{ total_donation }}</h3>
+        <div class="delete-section">
+            {% if can_delete_project %}
+                <button id="delete-project-btn" class="btn btn-danger">Delete Project</button>
+            {% else %}
+                <p>This project cannot be deleted because the total donation exceeds 25% of the total target.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var mySwiper = new Swiper('.swiper-container', {
+                // Optional parameters
+                loop: true,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+            });
+        });
+    </script>
+   
+<script>
+    document.getElementById('delete-project-btn').addEventListener('click', function() {
+        if (confirm('Are you sure you want to delete this project?')) {
+            // Redirect to delete project URL
+            window.location.href = "{% url 'delete_project' project.id %}";
+        }
+    });
+</script>
+</body>
+{% endblock %}
+

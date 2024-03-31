@@ -152,6 +152,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+
 #Configure the email smtp service
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ['EMAIL_HOST']

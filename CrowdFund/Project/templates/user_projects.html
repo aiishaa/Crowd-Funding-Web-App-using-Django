@@ -1,7 +1,35 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% block 'content' %}
-<body>
-  {{ projects }}
-</body>
-<!-- {% endblock %} -->
+<html><head></head><body>
+<div class="container">
+    <h1>User Projects</h1>
+    <div class="row">
+        {% for project in projects %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <!-- Display the first picture of the project, if available -->
+                {% if project.pictures %}
+                    <img src="{{ project.pictures.first.picture.url }}" class="card-img-top" alt="Project Image">
+                {% else %}
+                    <!-- Display a placeholder image if no pictures are available -->
+                    <img src="{% static 'placeholder_image.jpg' %}" class="card-img-top" alt="Placeholder Image">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <p class="card-text">{{ project.description }}</p>
+                    <p class="card-text">Total Target: {{ project.total_target }}</p>
+                    <p class="card-text">Start Time: {{ project.start_time }}</p>
+                    <p class="card-text">End Time: {{ project.end_time }}</p>
+                    <a href="{% url 'project_details' project.id %}" class="btn btn-info">Show Details</a>
+                    <a href="{% url 'edit_project' project.id %}" class="btn btn-primary">Edit</a>
+                    
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</body></html>
+{% endblock %}

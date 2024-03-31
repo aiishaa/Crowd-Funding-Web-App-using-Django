@@ -1,0 +1,88 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block 'content' %}
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+<body>
+    <div class="container">
+        <h1>Edit Project</h1>
+        <form method="post" enctype="multipart/form-data" class="edit-project-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_title">Title:</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group">
+                <label for="id_description">Description:</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group">
+                <label for="id_category">Category:</label>
+                {{ form.category }}
+            </div>
+            <div class="form-group">
+                <label for="id_tags">Tags:</label>
+                <input type="text" id="id_tags" name="tags" value="{% for tag in form.tags.value %}{{ tag }}{% if not forloop.last %}, {% endif %}{% endfor %}" placeholder="Enter tags separated by commas">
+            </div>
+            <div class="form-group">
+                <label for="id_total_target">Total Target:</label>
+                {{ form.total_target }}
+            </div>
+            <div class="form-group">
+                <label for="id_start_time">Start Time:</label>
+                {{ form.start_time }}
+            </div>
+            <div class="form-group">
+                <label for="id_end_time">End Time:</label>
+                {{ form.end_time }}
+            </div>
+            <div class="form-group">
+                <label for="id_picture">Pictures:</label>
+                <div class="project-images">
+                    {% for pic in form.instance.picture.all %}
+                        <img src="{{ pic.picture.url }}" alt="Project Image">
+                    {% endfor %}
+                </div>
+                <input type="file" accept="image/*" multiple name="picture">
+            </div>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</body>
+{% endblock %}

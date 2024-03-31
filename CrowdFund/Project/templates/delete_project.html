@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+<div class="container">
+    <h2>Delete Project</h2>
+    <p>Are you sure you want to delete "{{ project.title }}"?</p>
+    <form action="{% url 'delete_project' project.id %}" method="post">
+        {% csrf_token %}
+        {% comment %} <button type="submit" class="btn btn-danger">Delete</button> {% endcomment %}
+        <a href="{% url 'user projects' id=project.p_owner_id %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'user projects' id=project.p_owner_id %}" class="btn btn-secondary">Delete</a>
+    </form>
+</div>
+{% endblock %}

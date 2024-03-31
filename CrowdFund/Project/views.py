@@ -1,10 +1,14 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse,get_object_or_404
 from .forms import *
 from django.http import HttpResponse
 from .models import *
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-import math
+from django.db.models import Sum
+from django.contrib import messages
+from decimal import Decimal
+from django.db.models import F, FloatField, ExpressionWrapper
 
 User = get_user_model()
 
@@ -34,13 +38,13 @@ def createProject(request, id):
     return render(request, 'create_project.html', context={"projectForm": f_project})
 
 
+
 def userProjects(request, id):
     try:
         projects = Project.objects.filter(p_owner_id=id)
-        for i in range(0, len(projects)):
-            projects[i].category_name = Category.objects.get(id=projects[i].category_id)
-            projects[i].owner_name = User.objects.get(id=projects[i].p_owner_id)
-        return render(request, r"user_projects.html", context={"projects": projects})
+        for project in projects:
+            project.pictures = Picture.objects.filter(project=project)
+        return render(request, "user_projects.html", context={"projects": projects})
     except Exception as e:
         return HttpResponse(e)
 
@@ -226,8 +230,128 @@ def deleteComment(request, userID, proID, commentID):
 
     comment = Comment.objects.get(id=commentID)
     comment.delete()
-
     url = reverse('other project desc', args=[userID, proID])
     return redirect(url)
 
+
+@login_required
+def project_edit(request, id):
+    try:
+        project = get_object_or_404(Project, id=id)
+        if request.method == 'POST':
+            form = ProjectForm(request.POST, request.FILES, instance=project)  # Include request.FILES here for handling file uploads
+            if form.is_valid():
+                # Save the project form
+                project = form.save(commit=False)
+                
+                # Process tags
+                tags_input = request.POST.get('tags', '')
+                tag_names = [tag.strip() for tag in tags_input.split(',') if tag.strip()]
+                project.tags.clear()  # Clear existing tags
+                for tag_name in tag_names:
+                    tag, created = Tag.objects.get_or_create(name=tag_name)
+                    project.tags.add(tag)
+                
+                # Save the project
+                project.save()
+
+                # Handle project pictures
+                if 'picture' in request.FILES:
+                    # Delete old pictures associated with the project
+                    project.picture_set.all().delete()
+                    
+                    # Save new pictures
+                    for file in request.FILES.getlist('picture'):
+                        Picture.objects.create(project=project, picture=file)
+
+                return redirect('user projects', id=project.p_owner_id)
+            else:
+                print("Form errors:", form.errors)
+        else:
+            form = ProjectForm(instance=project)
+        return render(request, 'edit_project.html', {'form': form, 'project': project})
+    except Project.DoesNotExist:
+        return HttpResponse("Project not found")
     
+    
+
+def project_details(request, id):
+    try:
+        project = get_object_or_404(Project, id=id)
+        project_pictures = Picture.objects.filter(project=project)
+
+        # Retrieve all comments for the project
+        comments = Comment.objects.filter(project=project)
+
+        # Set the user_profile_picture attribute for each comment
+        for comment in comments:
+            user = User.objects.get(id=comment.user_id)
+            comment.user_profile_picture = user.image_url
+
+        
+        total_donation = Donation.objects.filter(project=project).aggregate(Sum('donation_value'))['donation_value__sum']
+        total_donation = total_donation or 0
+        
+       
+        # Rating
+        average_rating = calculate_average_rating(project)
+        
+        total_target = project.total_target
+        total_donation_percentage = (total_donation / total_target) * 100 if total_target != 0 else 0
+        can_delete_project = total_donation_percentage <= 25
+
+        return render(request, 'project_details.html', {
+            'project': project,
+            'project_pictures': project_pictures,
+            'comments': comments,
+            'average_rating': average_rating,
+            'total_donation': total_donation,
+            # 'total_rate': total_rate,
+            # 'total_rate_count': total_rate_count,
+            'can_delete_project': can_delete_project
+        })
+    except Project.DoesNotExist:
+        return HttpResponse("Project not found")
+
+
+def delete_project(request, project_id):
+    project = Project.objects.get(id=project_id)
+    total_donation = project.total_donation
+    total_target = project.total_target
+
+    if total_donation < Decimal('0.25') * total_target:
+        project.delete()  # Hard delete the project
+        messages.success(request, 'Project has been deleted successfully.')
+        # Redirect to user projects view with the owner's ID
+        return redirect(reverse('user projects', kwargs={'id': project.p_owner_id}))  
+    else:
+        messages.error(request, 'Project cannot be deleted as donations exceed 25% of the target.')
+        # Redirect to project details view with the project ID
+        return redirect('project_details', project_id=project_id)
+
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    project_id = comment.project.id  # Retrieve the project ID before deleting the comment
+    comment.delete()
+    return redirect('project_details', id=project_id)
+
+
+def calculate_average_rating(project):
+    # Retrieve all ratings for the project
+    ratings = project.rate_set.all()
+
+    # Check if there are any ratings for the project
+    if ratings.exists():
+        # Calculate the sum of all ratings
+        total_rating = sum(rating.rateValue for rating in ratings)
+        # Calculate the average rating
+        average_rating = (total_rating / (ratings.count() * 5)) * 100  # Assuming rating scale is from 1 to 5
+    else:
+        average_rating = 0
+
+    # Format the average rating as a percentage string with one decimal place
+    formatted_rating = "{:.0f}%".format(average_rating)
+
+    
+    return formatted_rating

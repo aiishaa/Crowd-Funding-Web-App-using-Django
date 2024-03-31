@@ -143,15 +143,25 @@ def editProfile(request, id):
                 old_picture_path = os.path.join(settings.MEDIA_ROOT, str(old_profile_pic))
                 if os.path.exists(old_picture_path):
                     os.remove(old_picture_path)
-
-            # handle changing password
-            user = form.instance  
-            password1 = form.cleaned_data.get('password1')
-            if password1:  
-                user.set_password(password1)  
-                update_session_auth_hash(request, user)  
-            user.save()  
+            form.save()
             return redirect('show profile', id=user.id)
     else:
         form = EditProfileForm(instance=user)
     return render(request, 'user/editProfile.html', context={"form": form})
+
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        if request.user.check_password(password):
+            # User entered correct password
+            user = request.user
+            user.delete()
+            messages.success(request, "Your account has been deleted.")
+            return redirect('landing')
+        else:
+            # Incorrect password
+            messages.error(request, "Incorrect password. Please try again.")
+    return render(request, 'delete_account.html')
