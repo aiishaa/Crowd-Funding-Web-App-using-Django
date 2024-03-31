@@ -5,7 +5,6 @@ from .models import CustomForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-
 class SignupForm(UserCreationForm):
     class Meta:
         model = CustomForm
@@ -23,19 +22,14 @@ class SignupForm(UserCreationForm):
             raise forms.ValidationError('Please enter a valid Egyptian phone number starting with +20')
         return phone
 
-    # def save(self, commit=True):
-    #     user = super().save(commit=False)
-    #     user.set_password(self.cleaned_data["password1"])
-    #     if commit:
-    #         user.save()
-    #     return user
-
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput)
 
 class EditProfileForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    password1 = forms.CharField(label="New Password", widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}), required=False, initial='')
+    password2 = forms.CharField(label="Confirm New Password", widget=forms.PasswordInput, required=False)
 
     class Meta:
         model = CustomForm
@@ -43,7 +37,13 @@ class EditProfileForm(forms.ModelForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        if not phone.startswith('+20'):
+        if not phone.startswith('+20') or len(phone) > 13:
             raise forms.ValidationError('Please enter a valid Egyptian phone number starting with +20')
         return phone
 
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 != password2:
+            raise forms.ValidationError("The two password fields didn't match.")
+        return password2
