@@ -1,0 +1,268 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block 'content' %}
+<style>
+    .project_details {
+        overflow-y: scroll; 
+        max-height: 300px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    span {
+        color: #2e2b2b
+    }
+
+    .card-title {
+        margin: 15px;
+    }
+
+    #carouselExampleIndicators {
+        margin: 50px;
+    }
+
+    .rating {
+        height: 300px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    .images_slider {
+        overflow-y: scroll; 
+        height: 550px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    .rating {
+        height: 440px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    .comments {
+        overflow-y: scroll; 
+        max-height: 400px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    #comment_card {
+        width: 40rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    .donation {
+        overflow-y: scroll; 
+        height: 440px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+    }
+
+    .similarprojects {
+        overflow-y: scroll; 
+        height: 600px; 
+        width: 60rem; 
+        margin: 20px;
+        border: 1px solid #eee;
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    #similarprojectcard {
+        overflow-y: scroll; 
+        width: 30rem; 
+        height: 240px; 
+        margin: 20px;
+    }
+
+    .reporting {
+        height: 150px; 
+        width: 60rem; 
+        margin: 40px 0;
+        border: 1px solid #eee;
+    }
+
+
+</style>
+<body>
+    <h1 style="color: firebrick; text-align: center; margin: 20px;">{{ project.title }}</h1>
+    <div class="project" style="display: flex; flex-direction: column; align-items: center;">
+
+        <!-- details card -->
+        <div class="project_details">
+            <div class="card-body">
+                <h5 class="card-title" style="color: firebrick; text-align: center; margin: 25px 0; font-weight: bold; font-size: 25px;">Information</h5>
+                <h5 class="card-title"><span style="font-weight: bold;">Category:</span> {{ project.category_name }}</h5>
+                <h5 class="card-title"><span style="font-weight: bold;">Created by:</span> {{ project.owner_name }}</h5>
+                <h5 class="card-title"><span style="font-weight: bold;">Description:</span> {{ project.description }}</h5>
+                <h5 class="card-title"><span style="font-weight: bold;">Total target:</span> {{ project.total_target }}</h5>
+                <h5 class="card-title"><span style="font-weight: bold;">Campaign start time:</span> {{ project.start_time }}</h5>
+                <h5 class="card-title"><span style="font-weight: bold;">Campaign end time:</span> {{ project.start_time }}</h5>
+            </div>
+        </div>
+
+        <!-- images slider -->
+        <div class="images_slider">
+            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 25px 0; font-weight: bold; font-size: 25px;">Related images</h5>
+            <div id="carouselExampleIndicators" class="carousel slide">
+                <div class="carousel-indicators">
+                    {% for image in images %}
+                    {% if forloop.first %}
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" class="active" aria-current="true" aria-label="Slide {{ forloop.counter }}"></button>
+                    {% else %}
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" aria-label="Slide {{ forloop.counter }}"></button>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for image in images %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ image.image_url }}" class="d-block w-100" style="width: 400px; height: 400px;" alt="not found">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- rating -->
+        <div class="rating">
+            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 25px 0; font-weight: bold; font-size: 25px;">Average Rating</h5>
+            <div class="progress" style="margin: 40px 0 0 60px; width: 50rem; height: 20px;">
+                {% if averageRate == 0 %}
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                {% elif averageRate == 1 %}
+                <div class="progress-bar" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">20%</div>
+                {% elif averageRate == 2 %}
+                <div class="progress-bar" role="progressbar" style="width: 40%;" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">40%</div>
+                {% elif averageRate == 3 %}
+                <div class="progress-bar" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">60%</div>
+                {% elif averageRate == 4 %}
+                <div class="progress-bar" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">80%</div>
+                {% else %}
+                <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">100%</div>
+                {% endif %}
+            </div>
+            <h5 class="card-title" style="margin: 80px 0 0 60px; color: firebrick; font-weight: bold; font-size: 20px;">Your Rate: </h5>
+            <form method="post" style="margin: 40px 0 0 60px;">
+                {{rateForm}}
+                {% csrf_token %}
+                <input name="rate_submit" type="submit" class="btn btn-success">
+            </form>
+        </div>
+
+        <!-- comments -->
+        <div class="comments">
+            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 30px 0; font-weight: bold; font-size: 25px;">Comments</h5>
+            {% for comment in comments %}
+            {% if comment.user_id == userID %}
+            <div class="card" id="comment_card">
+                <div class="card-body">
+                    <img src="{{ comment.user_profile_picture }}" style="width: 100px; height: 100px; border-radius: 60px;" alt="not found">
+                    <h5 class="card-title">{{ comment.user_name }}</h5>
+                    <p class="card-text">{{ comment.comment_description }}</p>
+                    <a href="{% url 'delete comment' comment.user_id comment.project_id comment.id %}" class="btn btn-primary" style="background-color: red; border-color: red;">Delete</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="card" id="comment_card">
+                <div class="card-body">
+                    <img src="{{ comment.user_profile_picture }}" style="width: 100px; height: 100px; border-radius: 60px;" alt="not found">
+                    <h5 class="card-title">{{ comment.user_name }}</h5>
+                    <p class="card-text">{{ comment.comment_description }}</p>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            <form method="post" style="margin: 40px 0 0 60px;">
+                {{commentForm}}
+                {% csrf_token %}
+                <input name="comment_submit" type="submit" class="btn btn-success">
+            </form>
+        </div>
+
+        <!-- donation -->
+        <div class="donation">
+            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 25px 0; font-weight: bold; font-size: 25px;">Donation</h5>
+            <h5 class="card-title" style="margin: 80px 0 0 60px; color: firebrick; font-weight: bold; font-size: 20px;">Total Target: </h5>
+            <input type="text" id="numberField" name="numberField" value="{{ project.total_target }}" readonly style="cursor: none; margin-top: 20px; position: relative; left: 60px;">
+            <h5 class="card-title" style="margin: 80px 0 0 60px; color: firebrick; font-weight: bold; font-size: 20px;">Current Total Donation: </h5>
+            <input type="text" id="numberField" name="numberField" value="{{ totalDonation }}" readonly style="cursor: none; margin-top: 20px; position: relative; left: 60px;">
+            <h5 class="card-title" style="margin: 80px 0 0 60px; color: firebrick; font-weight: bold; font-size: 20px;">Your Donation: </h5>
+            <form method="post" style="margin: 40px 0 0 60px;">
+                {{donationForm}}
+                {% csrf_token %}
+                <input name="donation_submit" type="submit" class="btn btn-success">
+            </form>
+        </div>
+
+        <!-- similar projects -->
+        <div class="similarprojects">
+            <h5 class="card-title" style="color: firebrick; text-align: center; margin: 25px 0; font-weight: bold; font-size: 25px;">Similar Projects</h5>
+            {% for project in similarProjects %}
+            <div id="similarprojectcard" class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: firebrick; text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 25px;">{{ project.title }}</h5>
+                    <h5 class="card-title"><span style="font-weight: bold;">Category:</span> {{ project.category_name }}</h5>
+                    <h5 class="card-title"><span style="font-weight: bold;">Created by:</span> {{ project.owner_name }}</h5>
+                    <div style="display: flex; flex-direction: row; justify-content: center;">
+                        <a href="{% url 'other project desc' userID project.id %}" class="btn btn-primary" style="margin-top: 20px;">Show</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+
+        <!-- Reporting this project -->
+        <div class="reporting">
+            <h5 class="card-title" style="color: firebrick; margin: 25px 0 15px 60px; font-weight: bold; font-size: 20px;">Do you want to report on this project? (We will not display this project for you again.)</h5>
+            <form method="post" style="margin-left: 60px;">
+                {{reportForm}}
+                {% csrf_token %}
+                <input name="report_submit" type="submit" class="btn btn-success">
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        inputs = document.querySelectorAll('input');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].classList.add('form-control');
+            inputs[i].style.width = '20rem'
+            inputs[i].style.margin = '10px 0';
+        }
+        
+        // rating menu or selector
+        select = document.querySelector('select');
+        select.classList.add('form-control');
+        select.style.width = '20rem';
+        select.style.margin = '15px 0 10px';
+
+        // comment text area
+        select = document.querySelector('textarea');
+        select.classList.add('form-control');
+        select.style.width = '20rem';
+        select.style.margin = '15px 0 10px';
+    </script>
+
+
+
+</body>
+{% endblock %}
