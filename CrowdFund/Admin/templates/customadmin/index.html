@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Custom Admin Panel</title>
+    <style>
+        .link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff; 
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .link:hover {
+            background-color: #0056b3; 
+        }
+
+    </style>
+</head>
+<body>
+    {% csrf_token %}
+    <h1>Custom Admin Panel</h1>
+    <a class="link" href="{% url 'create_category' %}">Add Category</a>
+</body>
+</html>
+
