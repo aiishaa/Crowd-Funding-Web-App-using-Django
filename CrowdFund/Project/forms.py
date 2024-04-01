@@ -22,6 +22,15 @@ class ProjectForm(forms.ModelForm):
             return end_time
         else:
             raise forms.ValidationError("End date must be after start date")
+
+class CategoryForm(forms.ModelForm):
+    category_name = forms.CharField(
+        max_length=50, 
+        required=False
+    )
+    class Meta:
+        model = Category
+        fields = ['category_name']
         
 class AddRate(forms.ModelForm):
     
