@@ -18,6 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 import os
 from django.conf import settings
+from Project.models import Project, Picture
 
 User = get_user_model()
 
@@ -121,9 +122,30 @@ def logout_user(request):
     logout(request)
     return redirect('landing')
 
+
 @login_required
 def goHome(request):
-    return render(request, 'home.html')
+    user = request.user
+    latest_projects = Project.objects.filter(p_owner=user).order_by('-created_at')[:5]
+
+    top_rated_projects = Project.objects.filter(p_owner=user).order_by('-rate')[:5]
+
+    latest_projects_with_pictures = []
+    for project in latest_projects:
+        pictures = Picture.objects.filter(project=project)
+        latest_projects_with_pictures.append({'project': project, 'pictures': pictures})
+
+    top_rated_projects_with_pictures = []
+    for project in top_rated_projects:
+        pictures = Picture.objects.filter(project=project)
+        top_rated_projects_with_pictures.append({'project': project, 'pictures': pictures})
+
+    context = {
+        'latest_projects_with_pictures': latest_projects_with_pictures,
+        'top_rated_projects_with_pictures': top_rated_projects_with_pictures,
+    }
+
+    return render(request, 'home.html', context)
 
 @login_required
 def showProfile(request, id):
