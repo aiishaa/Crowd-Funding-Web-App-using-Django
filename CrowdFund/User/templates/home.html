@@ -7,8 +7,8 @@
         color: rgb(192, 192, 227);
     }
     img {
-        width: 700px;
-        height: auto;
+        width: 100px;
+        height: 100px;
         object-fit: contain;
         margin-bottom: 40px;
     }
@@ -28,7 +28,20 @@
 <body>
     {% csrf_token %}
     <div class="container">
-        <h1 class="mt-5 mb-4 text-center">Welcome, {{user.username}}</h1>
+        <div class="slick-slider">
+            <h1 style="color:rgb(186, 163, 133)">Latest projects</h1>
+            {% for project_data in latest_projects_with_pictures %}
+                <div>
+                    <h3 style="color:rgb(186, 186, 149)">Title: {{ project_data.project.title }}</h3>
+                    <p><b>Description:</b> {{ project_data.project.description }}</p>
+                    <p><b>Created at:</b> {{ project_data.project.created_at }} </p>
+                    {% for picture in project_data.pictures %}
+                        <img src="{{ picture.picture.url }}" alt="Project Image">
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        
         <div class="row justify-content-center">
             <a class="project" href = "{% url 'create project' user.id %}">Add a project</a>
         </div>
