@@ -1,5 +1,5 @@
 from django import forms
-from .models import Project, Category, Rate, Comment, Donation, Report
+from .models import Project, Category, Rate, Comment, Donation, Report, FeaturedProjects
 from django.core.validators import MaxValueValidator
 
 class ProjectForm(forms.ModelForm):
@@ -63,6 +63,36 @@ class AddReport(forms.ModelForm):
     class Meta:
         model= Report
         fields= ()
+        
+
+class FeaturedProjectsForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        previous_projects = kwargs.pop('initial', {}).get('previous_projects', [])
+        super(FeaturedProjectsForm, self).__init__(*args, **kwargs)
+        if previous_projects:
+            selected_projects = Project.objects.filter(id__in=previous_projects)
+            self.fields['projects'].initial = selected_projects
+
+
+    projects = forms.ModelMultipleChoiceField(queryset=Project.objects.all(), widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = FeaturedProjects
+        fields = []  
+
+    def clean_projects(self):
+        selected_projects = self.cleaned_data['projects']
+        if len(selected_projects) > 5:
+            raise forms.ValidationError("You can only select maximum 5 projects.")
+        return selected_projects
+
+    
+
+
+
+
+
     
 
     

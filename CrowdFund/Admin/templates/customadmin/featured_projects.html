@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Featured Projects</title>
+    <style>
+        a, button {
+            background-color: green; 
+            color: white;
+            border-color: green;
+            margin: 10px;
+            width: 60px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="featuredprojects_submit">Submit</button>
+    </form>  
+    <a href="{% url 'admin page' %}" class="button">Back</a> 
+</body>
+</html>
+

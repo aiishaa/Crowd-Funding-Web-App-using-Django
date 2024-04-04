@@ -22,6 +22,10 @@
     {% csrf_token %}
     <h1>Custom Admin Panel</h1>
     <a class="link" href="{% url 'create_category' %}">Add Category</a>
+
+    <h1>Manage Featured Projects</h1>
+    <a class="link" href="{% url 'featured_projects' %}">Manage</a>
+
 </body>
 </html>
 

@@ -74,3 +74,10 @@ class Rate(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rateValue = models.IntegerField(choices=rate_choices)
+
+class FeaturedProjects(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+
+
+
