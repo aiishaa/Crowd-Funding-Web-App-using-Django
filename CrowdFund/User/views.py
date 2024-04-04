@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 import os
 from django.conf import settings
-from Project.models import Project, Picture
+from Project.models import Project, Picture, Category
 
 User = get_user_model()
 
@@ -140,9 +140,11 @@ def goHome(request):
         pictures = Picture.objects.filter(project=project)
         top_rated_projects_with_pictures.append({'project': project, 'pictures': pictures})
 
+    categories = Category.objects.all()
     context = {
         'latest_projects_with_pictures': latest_projects_with_pictures,
         'top_rated_projects_with_pictures': top_rated_projects_with_pictures,
+        'categories': categories
     }
 
     return render(request, 'home.html', context)

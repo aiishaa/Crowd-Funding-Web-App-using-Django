@@ -355,3 +355,12 @@ def calculate_average_rating(project):
 
     
     return formatted_rating
+
+def get_category_projects(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    projects = Project.objects.filter(category=category)
+    context = {
+        'category': category,
+        'projects': projects
+    }
+    return render(request, 'category_projects.html', context)
