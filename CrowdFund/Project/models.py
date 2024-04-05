@@ -8,7 +8,7 @@ def project_images_path(instance, filename):
     return f'projects/{folder_name}/{filename}'
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=50)
+    category_name = models.CharField(max_length=50, unique=True)
     
     def __str__(self):
         return self.category_name
