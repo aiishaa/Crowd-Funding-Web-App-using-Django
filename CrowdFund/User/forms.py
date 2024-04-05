@@ -18,7 +18,7 @@ class SignupForm(UserCreationForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        if not phone.startswith('+20') or len(phone) > 13:
+        if not phone.startswith('+20') or len(phone) != 13:
             raise forms.ValidationError('Please enter a valid Egyptian phone number starting with +20')
         return phone
 
@@ -42,7 +42,7 @@ class EditProfileForm(forms.ModelForm):
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
-        if not phone.startswith('+20'):
+        if not phone.startswith('+20') or len(phone) != 13:
             raise forms.ValidationError('Please enter a valid Egyptian phone number starting with +20')
         return phone
 

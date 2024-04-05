@@ -70,7 +70,7 @@ def sendMail(request, user):
     email_body = f"Hi {user.username},\n\
         Please verify your email to be able to login into your account by clicking the following link:\n \
         {activate_url}"
-    from_email = 'aishafathy999@example.com'
+    from_email =  os.environ['EMAIL_HOST_USER']
     recipient_list = [user.email]
 
     send_mail(email_subject, email_body, from_email, recipient_list)

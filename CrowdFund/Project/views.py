@@ -375,10 +375,6 @@ def search_projects(request):
         category_query = Q(category__category_name__icontains=query)
         # Filter projects by tags
         tags_query = Q(tags__name__icontains=query)
-        print('-'*50)
-        print(tags_query)
-        print(category_query)
-        print('-'*50)
         # Combine the queries using OR condition
         projects = projects.filter(category_query | tags_query).distinct()
     
