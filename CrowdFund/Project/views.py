@@ -364,3 +364,19 @@ def get_category_projects(request, category_id):
         'projects': projects
     }
     return render(request, 'category_projects.html', context)
+
+
+
+def search_projects(request):
+    query = request.GET.get('search_query')
+    if query:
+        # Search for projects by title, description, category, or tags
+        projects = Project.objects.filter(
+            Q(category_category_name_icontains=query) |
+            Q(tags_name_icontains=query)
+        ).distinct()
+    else:
+        projects = Project.objects.all()
+    
+    return render(request, 'search_results.html', {'projects': projects, 'query': query})
+

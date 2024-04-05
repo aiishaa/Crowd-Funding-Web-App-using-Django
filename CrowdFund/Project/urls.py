@@ -11,5 +11,6 @@ urlpatterns = [
     path('project/delete/<int:project_id>/', delete_project, name='delete_project'),
     path('delete_comment/<int:comment_id>/', delete_comment, name='delete_comment'),
     path('details/<int:id>/', project_details, name='project_details'),
-    path('category/<int:category_id>/', get_category_projects, name='category_projects')
+    path('category/<int:category_id>/', get_category_projects, name='category_projects'),
+    path('search/', search_projects, name='search_projects')
 ]
