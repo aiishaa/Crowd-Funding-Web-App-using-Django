@@ -59,18 +59,23 @@
     </style>
 </head>
 <body>
-    <h1>Add Category</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-    {% if messages %}
-        <h3 class="messages">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </h3>
-    {% endif %}
+    <body>
+        <h1>Add Category</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+        <a href="{% url 'admin page' %}">
+            <button>Previous</button>
+        </a>
+        {% if messages %}
+            <h3 class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </h3>
+        {% endif %}
+    </body>
 </body>
 </html>
