@@ -369,14 +369,19 @@ def get_category_projects(request, category_id):
 
 def search_projects(request):
     query = request.GET.get('search_query')
+    projects = Project.objects.all()
     if query:
-        # Search for projects by title, description, category, or tags
-        projects = Project.objects.filter(
-            Q(category_category_name_icontains=query) |
-            Q(tags_name_icontains=query)
-        ).distinct()
-    else:
-        projects = Project.objects.all()
+        # Filter projects by category name
+        category_query = Q(category__category_name__icontains=query)
+        # Filter projects by tags
+        tags_query = Q(tags__name__icontains=query)
+        print('-'*50)
+        print(tags_query)
+        print(category_query)
+        print('-'*50)
+        # Combine the queries using OR condition
+        projects = projects.filter(category_query | tags_query).distinct()
     
-    return render(request, 'search_results.html', {'projects': projects, 'query': query})
+    return render(request, 'search_results.html', {'projects': projects, 'query':query})
+
 
