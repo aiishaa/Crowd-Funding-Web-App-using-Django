@@ -15,8 +15,8 @@ CrowdFunding Web App that allow user to:
 ## Built With:
 
 - [Django Framwork](https://docs.djangoproject.com/en/)
-- [MySqlClient Database](https://pypi.org/project/mysqlclient/)
-- [HTML, CSS, JS, Bootstrap....](https://www.w3.org/)
+- [MySql Database](https://pypi.org/project/mysql-connector-python/)
+- [HTML, CSS, JS, Bootstrap....](https://getbootstrap.com/)
 
 ## Installation and Run project:
 
@@ -70,19 +70,15 @@ CrowdFunding Web App that allow user to:
   ```bash
   pip3 install -r requirements.txt
   ```
-- [Install mysqlClient]
-  ```bash
-  pip3 install mysqlclient
-  ```
 
 6- Set The Values in ".env" file to test Verification using email
 
 DB_USER="your db user"<br>
-DB_PASSWORD="your db user password"
-DB_HOST="127.0.0.1 or localhost"
-EMAIL_HOST = 'smtp.gmail.com'  
-EMAIL_HOST_USER = 'your email address'  
-EMAIL_HOST_PASSWORD = 'your app password you created in your google account'
+DB_PASSWORD="your db user password"<br>
+DB_HOST="127.0.0.1 or localhost"<br>
+EMAIL_HOST = 'smtp.gmail.com'<br>
+EMAIL_HOST_USER = 'your email address'<br> 
+EMAIL_HOST_PASSWORD = 'your app password you created in your google account'<br>
 
 \*\* Add your [gmail] but make sure that the two factor authentication is activated in the account and that you created an app password to use it as a value for the env variable 'EMAIL_HOST_PASSWORD' :D
 
