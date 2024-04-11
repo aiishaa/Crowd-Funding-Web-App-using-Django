@@ -16,7 +16,6 @@ CrowdFunding Web App that allow user to:
 
 - [Django Framwork](https://docs.djangoproject.com/en/)
 - [MySqlClient Database](https://pypi.org/project/mysqlclient/)
-- [Soft UI Design System](https://github.com/app-generator/django-soft-ui-design)
 - [HTML, CSS, JS, Bootstrap....](https://www.w3.org/)
 
 ## Installation and Run project:
