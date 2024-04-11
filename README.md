@@ -38,7 +38,7 @@ CrowdFunding Web App that allow user to:
   ````bash
   python3 -m pip install --upgrade pip
 
-3- run your mysql server and create new Schema in your DBMS with name "crowdfunding" or change the name at (setting.py) and set your DB Server information [ host name and password ]
+3- run your mysql server and create new Schema in your DBMS with name "CrowdFund" or change the name at (setting.py) and set your DB Server information [ host name and password ]
 
 4- Open the project in vs Code
 
@@ -80,7 +80,7 @@ EMAIL_HOST = 'smtp.gmail.com'<br>
 EMAIL_HOST_USER = 'your email address'<br> 
 EMAIL_HOST_PASSWORD = 'your app password you created in your google account'<br>
 
-\*\* Add your [gmail] but make sure that the two factor authentication is activated in the account and that you created an app password to use it as a value for the env variable 'EMAIL_HOST_PASSWORD' :D
+\*\* Add your [gmail] but make sure that the two factor authentication is activated in the account and that you created an app password to use it as a value for the env variable 'EMAIL_HOST_PASSWORD' \*\*
 
 
 7- Run the following to load Data base
