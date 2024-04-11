@@ -77,7 +77,7 @@ CrowdFunding Web App that allow user to:
 
 6- Set The Values in ".env" file to test Verification using email
 
-DB_USER="your db user"
+DB_USER="your db user"<br>
 DB_PASSWORD="your db user password"
 DB_HOST="127.0.0.1 or localhost"
 EMAIL_HOST = 'smtp.gmail.com'  
@@ -127,8 +127,8 @@ python3 manage.py createsuperuser
 
 ## Authors
 
-- [@Aisha Fathy]
-- [@Mohamed Tharwat]
-- [@Sara Eldwiny]
-- [@Jasmine walid]
-- [@Nadine Abdelazeem]
+- Aisha Fathy
+- Mohamed Tharwat
+- Sara Eldwiny
+- Jasmine walid
+- Nadine Abdelazeem
